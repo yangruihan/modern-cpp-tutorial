@@ -2,8 +2,7 @@
 
 # Modern C++ Tutorial: C++11/14/17/20 On the Fly
 
-![](https://img.shields.io/travis/changkun/modern-cpp-tutorial/master?style=flat-square) [![](https://img.shields.io/badge/language-English-blue.svg?style=flat-square)](./README.md) [![](https://img.shields.io/badge/language-简体中文-red.svg?style=flat-square)](./README-zh-cn.md) [![](https://img.shields.io/badge/€-donate-ff69b4.svg?style=flat-square)](./assets/donate.md) [![](https://img.shields.io/badge/chat-community-667ed5.svg?style=flat-square)](./assets/community.md) 
-
+![](https://img.shields.io/travis/changkun/modern-cpp-tutorial/master?style=flat-square) [![](https://img.shields.io/badge/language-English-blue.svg?style=flat-square)](./README.md) [![](https://img.shields.io/badge/language-简体中文-red.svg?style=flat-square)](./README-zh-cn.md) [![](https://img.shields.io/badge/€-donate-ff69b4.svg?style=flat-square)](./assets/donate.md)
 ## Purpose
 
 The book claims to be "On the Fly". Its intent is to provide a comprehensive introduction to the relevant features regarding modern C++ (before 2020s).
@@ -35,7 +34,7 @@ Each chapter of this book contains a lot of code. If you encounter problems whil
 
 ## Exercises
 
-There are few exercises at the end of each chapter of the book. These are ment to test whether you have mastered the knowledge in the current chapter. You can find the possible answer to the problem [here](./exercises). Again, the folder name is the chapter number.
+There are few exercises at the end of each chapter of the book. These are meant to test whether you have mastered the knowledge in the current chapter. You can find the possible answer to the problem [here](./exercises). Again, the folder name is the chapter number.
 
 ## Website
 
@@ -56,6 +55,13 @@ This book was originally written in Chinese by [Changkun Ou](https://changkun.de
 The author has limited time and language skills. If readers find any mistakes in the book or any language improvements, please feel free to open an [Issue](https://github.com/changkun/modern-cpp-tutorial/issues) or start a [Pull request](https://github.com/changkun/modern-cpp-tutorial/pulls). For detailed guidelines and checklist, please refer to [How to contribute](CONTRIBUTING.md).
 
 The author is grateful to all contributors, including but not limited to [Contributors](https://github.com/changkun/modern-cpp-tutorial/graphs/contributors).
+
+<p>This project is also supported by:</p>
+<p>
+  <a href="https://www.digitalocean.com/?refcode=834a3bbc951b&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=CopyPaste">
+    <img src="https://opensource.nyc3.cdn.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" width="201px">
+  </a>
+</p>
 
 ## Licenses
 

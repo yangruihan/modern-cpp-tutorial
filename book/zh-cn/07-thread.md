@@ -33,7 +33,7 @@ C++11 引入了 `mutex` 相关的类，其所有相关的函数都放在 `<mutex
 
 `std::mutex` 是 C++11 中最基本的 `mutex` 类，通过实例化 `std::mutex` 可以创建互斥量，
 而通过其成员函数 `lock()` 可以进行上锁，`unlock()` 可以进行解锁。
-但是在在实际编写代码的过程中，最好不去直接调用成员函数，
+但是在实际编写代码的过程中，最好不去直接调用成员函数，
 因为调用成员函数就需要在每个临界区的出口处调用 `unlock()`，当然，还包括异常。
 这时候 C++11 还为互斥量提供了一个 RAII 语法的模板类 `std::lock_guard`。
 RAII 在不失代码简洁性的同时，很好的保证了代码的异常安全性。
@@ -66,7 +66,7 @@ int main() {
 }
 ```
 
-由于 C++ 保证了所有栈对象在声明周期结束时会被销毁，所以这样的代码也是异常安全的。
+由于 C++ 保证了所有栈对象在生命周期结束时会被销毁，所以这样的代码也是异常安全的。
 无论 `critical_section()` 正常返回、还是在中途抛出异常，都会引发堆栈回退，也就自动调用了 `unlock()`。
 
 而 `std::unique_lock` 则相对于 `std::lock_guard` 出现的，`std::unique_lock` 更加灵活，
@@ -261,7 +261,7 @@ int main() {
 从直观上看，`t2` 中 `a = 5;` 这一条语句似乎总在 `flag = 1;` 之前得到执行，而 `t1` 中 `while (flag != 1)` 
 似乎保证了 `std::cout << "b = " << b << std::endl;` 不会再标记被改变前执行。从逻辑上看，似乎 `b` 的值应该等于 5。
 但实际情况远比此复杂得多，或者说这段代码本身属于未定义的行为，因为对于 `a` 和 `flag` 而言，他们在两个并行的线程中被读写，
-出现了竞争。除此之外，即便我们忽略竞争读写，仍然可能收 CPU 的乱序执行，编译器对指令的重排的影响，
+出现了竞争。除此之外，即便我们忽略竞争读写，仍然可能受 CPU 的乱序执行，编译器对指令的重排的影响，
 导致 `a = 5` 发生在 `flag = 1` 之后。从而 `b` 可能输出 0。
 
 ### 原子操作
@@ -439,7 +439,7 @@ int main() {
     std::atomic<int> counter = {0};
     std::vector<std::thread> vt;
     for (int i = 0; i < 100; ++i) {
-        vt.emplace_back([](){
+        vt.emplace_back([&](){
             counter.fetch_add(1, std::memory_order_relaxed);
         });
     }
@@ -453,7 +453,8 @@ int main() {
 2. 释放/消费模型：在此模型中，我们开始限制进程间的操作顺序，如果某个线程需要修改某个值，但另一个线程会对该值的某次操作产生依赖，即后者依赖前者。具体而言，线程 A 完成了三次对 `x` 的写操作，线程 `B` 仅依赖其中第三次 `x` 的写操作，与 `x` 的前两次写行为无关，则当 `A` 主动 `x.release()` 时候（即使用 `std::memory_order_release`），选项 `std::memory_order_consume` 能够确保 `B` 在调用 `x.load()` 时候观察到 `A` 中第三次对 `x` 的写操作。我们来看一个例子：
 
     ```cpp
-    std::atomic<int*> ptr;
+    // 初始化为 nullptr 防止 consumer 线程从野指针进行读取
+    std::atomic<int*> ptr(nullptr);
     int v;
     std::thread producer([&]() {
         int* p = new int(42);
@@ -471,9 +472,9 @@ int main() {
     consumer.join();
     ```
 
-3. 释放/获取模型：在此模型下，我们可以进一步加紧对不同线程间原子操作的顺序的限制，在释放 `std::memory_order_release` 和获取 `std::memory_order_acquire` 之间规定时序，即发生在释放操作之前的**所有**写操作，对其他线程的任何获取操作都是可见的，亦即发生顺序（happens-before）。
+3. 释放/获取模型：在此模型下，我们可以进一步加紧对不同线程间原子操作的顺序的限制，在释放 `std::memory_order_release` 和获取 `std::memory_order_acquire` 之间规定时序，即发生在释放（release）操作之前的**所有**写操作，对其他线程的任何获取（acquire）操作都是可见的，亦即发生顺序（happens-before）。
 
-    可以看到，`std::memory_order_release` 确保了它之后的写行为不会发生在释放操作之前，是一个向后的屏障，而 `std::memory_order_acquire` 确保了它之前的写行为，不会发生在该获取操作之后，是一个向前的屏障。对于选项 `std::memory_order_acq_rel` 而言，则结合了这两者的特点，唯一确定了一个内存屏障，使得当前线程对内存的读写不会被重排到此操作的前后。
+    可以看到，`std::memory_order_release` 确保了它之前的写操作不会发生在释放操作之后，是一个向后的屏障（backward），而 `std::memory_order_acquire` 确保了它之前的写行为不会发生在该获取操作之后，是一个向前的屏障（forward）。对于选项 `std::memory_order_acq_rel` 而言，则结合了这两者的特点，唯一确定了一个内存屏障，使得当前线程对内存的读写不会被重排并越过此操作的前后：
 
     我们来看一个例子：
 
@@ -509,7 +510,7 @@ int main() {
     std::atomic<int> counter = {0};
     std::vector<std::thread> vt;
     for (int i = 0; i < 100; ++i) {
-        vt.emplace_back([](){
+        vt.emplace_back([&](){
             counter.fetch_add(1, std::memory_order_seq_cst);
         });
     }

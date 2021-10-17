@@ -8,7 +8,7 @@ order: 1
 
 [TOC]
 
-**Compilation Environment**: This book will use `clang++` as the only compiler used, 
+**Compilation Environment**: This book will use `clang++` as the only compiler used,
 and always use the `-std=c++2a` compilation flag in your code.
 
 ```bash
@@ -21,15 +21,15 @@ InstalledDir: /Library/Developer/CommandLineTools/usr/bin
 
 ## 1.1 Deprecated Features
 
-Before learning modern C++, let's take a look at the main features that have been deprecated since C++11:
+Before learning modern C++, let's take a look at the main features that have deprecated since C++11:
 
-> **Note**: Deprecation is not completely unusable, it is only intended to imply that features will disappear from future standards and should be avoided. However, the deprecated features are still part of the standard library, and most of the features are actually "permanently" reserved for compatibility reasons.
+> **Note**: Deprecation is not completely unusable, it is only intended to imply that features will disappear from future standards and should be avoided. But, the deprecated features are still part of the standard library, and most of the features are actually "permanently" reserved for compatibility reasons.
 
 - **The string literal constant is no longer allowed to be assigned to a `char *`. If you need to assign and initialize a `char *` with a string literal constant, you should use `const char *` or `auto`.**
 
-    ```cpp
-    char *str = "hello world!"; // A deprecation warning will appear
-    ```
+  ```cpp
+  char *str = "hello world!"; // A deprecation warning will appear
+  ```
 
 - **C++98 exception description, `unexpected_handler`, `set_unexpected()` and other related features are deprecated and should use `noexcept`.**
 
@@ -47,15 +47,15 @@ Before learning modern C++, let's take a look at the main features that have bee
 
 - ... and many more
 
-There are also other features such as parameter binding (C++11 provides `std::bind` and `std::function`), `export`, and etc. are also deprecated. These features mentioned above **If you have never used or heard of it, please don't try to understand them. You should move closer to the new standard and learn new features directly**. After all, technology is moving forward.
+There are also other features such as parameter binding (C++11 provides `std::bind` and `std::function`), `export` etc. are also deprecated. These features mentioned above **If you have never used or heard of it, please don't try to understand them. You should move closer to the new standard and learn new features directly**. After all, technology is moving forward.
 
 ## 1.2 Compatibilities with C
 
-For some force majeure and historical reasons, we had to use some C code (even old C code) in C++, for example, Linux system calls. Before the advent of modern C++, most people talked about "what is the difference between C and C++". Generally speaking, in addition to answering the object-oriented class features and the template features of generic programming, there is no other opinion, or even a direct answer. "Almost" is also a lot of people. The Venn diagram in Figure 1.2 roughly answers the C and C++ related compatibility.
+For some force majeure and historical reasons, we had to use some C code (even old C code) in C++, for example, Linux system calls. Before the advent of modern C++, most people talked about "what is the difference between C and C++". Generally speaking, in addition to answering the object-oriented class features and the template features of generic programming, there is no other opinion or even a direct answer. "Almost" is also a lot of people. The Venn diagram in Figure 1.2 roughly answers the C and C++ related compatibility.
 
 ![Figure 1.2: Compatabilities between ISO C and ISO C++](../../assets/figures/comparison.png)
 
-From now on, you should have the idea that "C++ is **not** a superset of C" in your mind (and not from the beginning, later [References for further reading] (# further reading references) The difference between C++98 and C99 is given). When writing C++, you should also avoid using program styles such as `void*` whenever possible. When you have to use C, you should pay attention to the use of `extern "C"`, separate the C language code from the C++ code, and then unify the link, for instance:
+From now on, you should have the idea that "C++ is **not** a superset of C" in your mind (and not from the beginning, later [References for further reading](#further-readings) The difference between C++98 and C99 is given). When writing C++, you should also avoid using program styles such as `void*` whenever possible. When you have to use C, you should pay attention to the use of `extern "C"`, separate the C language code from the C++ code, and then unify the link, for instance:
 
 ```cpp
 // foo.h
@@ -93,7 +93,7 @@ You should first compile the C code with `gcc`:
 gcc -c foo.c
 ```
 
-Comple and output the `foo.o` file, and link the C++ code to the `.o` file using `clang++` (or both compile to `.o` and then unlink them together):
+Compile and output the `foo.o` file, and link the C++ code to the `.o` file using `clang++` (or both compile to `.o` and then link them together):
 
 ```bash
 clang++ 1.1.cpp foo.o -std=c++2a -o 1.1
@@ -121,7 +121,7 @@ clean:
 	rm -rf *.o $(TARGET)
 ```
 
-> Note: Indentation in `Makefile` is a tab instead of a space character. If you copy this code directly into your editor, the tab may be automatically replaced. Please ensure the indentation in the `Makefile`. It is done by tabs.
+> **Note**: Indentation in `Makefile` is a tab instead of a space character. If you copy this code directly into your editor, the tab may be automatically replaced. Please ensure the indentation in the `Makefile` is done by tabs.
 >
 > If you don't know the use of `Makefile`, it doesn't matter. In this tutorial, you won't build code that is written too complicated. You can also read this book by simply using `clang++ -std=c++2a` on the command line.
 
